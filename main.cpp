@@ -16,7 +16,7 @@
 #include "allapotgep.h"
 #include "memtrace.h"
 
-#define ELKESZULT 1
+#define ELKESZULT 2
 
 int main() {
     GTINIT(std::cin); // Csak C(J)PORTA működéséhez kell

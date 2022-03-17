@@ -52,9 +52,10 @@ void States::setActive(bool setter) {
 }
 
 
-void StateEvent::nextStateEvent(){
-
-}
+/* void StateEvent::nextStateEvent(States* states, int currentStateNum, int nextStateNum){
+    states[currentStateNum].setActive(false);
+    states[nextStateNum].setActive(true);
+} */
 
 
 
@@ -69,11 +70,10 @@ void Allapotgep::konfigural(const char* fajlnev){
     std::ifstream myFile(fajlnev);
     if (myFile.is_open()){
         //To get the number of states from the first line
-        int numOfStates;
         myFile >> numOfStates;
 
         //Reading the next lines of the config file, thus getting the states of the state machine
-        States states[numOfStates];
+        states[numOfStates];
 
         for (int i = 0; i < numOfStates; ++i) {
             char acceptState;
@@ -86,10 +86,8 @@ void Allapotgep::konfigural(const char* fajlnev){
             delete[] nameState;
         }
 
-        //making the base state active
-        states[0].setActive(true);
-
         //To get the events of the state machine
+        int numOfStateEvents = 0;
         for (int i = 0; i < numOfStates; ++i) {
             for (int j = 0; j < numOfStates; ++j) {
                 char* eventGen = new char [5];
@@ -100,29 +98,47 @@ void Allapotgep::konfigural(const char* fajlnev){
                             break;
                         case 'A':
                         case 'a':
-
-                            break;
                         case 'C':
                         case 'c':
-
-                            break;
                         case 'G':
                         case 'g':
-
-                            break;
                         case 'T':
                         case 't':
-
+                            numOfStateEvents++;
+                            if (numOfStateEvents > 1){
+                                StateEvent* nextStateLogicTEMP = new StateEvent [numOfStateEvents];
+                                for (int l = 0; l < numOfStateEvents - 1; ++l) {
+                                    nextStateLogicTEMP[l] = nextStateLogic[l];
+                                }
+                                delete[] nextStateLogic;
+                                nextStateLogic = new StateEvent [numOfStateEvents];
+                                for (int l = 0; l < numOfStateEvents; ++l) {
+                                    nextStateLogic[l] = nextStateLogicTEMP[l];
+                                }
+                                delete[] nextStateLogicTEMP;
+                            }
+                            nextStateLogic = new StateEvent [numOfStateEvents];
                             break;
                         /*default:
                             throw (std::invalid_argument("Invalid genetic type in config file"));*/
                     }
                 }
-
+                delete[] eventGen;
             }
         }
+
+        //making the BASE state active
+        states[0].setActive(true);
 
     }
     else
         throw("E0PWAX");
 }
+
+/** Visszaadja melyik állapot aktív.
+     * @return pointer az aktív állapot nevére
+     */
+const char* Allapotgep::aktualisallapot(){
+
+}
+
