@@ -80,24 +80,30 @@ public:
 class States{ //for storing the states from the config file
 private:
     char* name;
+    bool active;
     bool acceptable;
 public:
-    States(){};
-    States(char* nam, bool acc) {name = nam; acceptable = acc;};
+    States(){active = false; acceptable = false;};
+    States(char* nam, bool act, bool acc) {name = nam; active = act; acceptable = acc;};
     char& getName();
     bool getAcceptable() const;
+    bool getActive();
     void setName(char* newname);
+    void setAcceptable(char setter);
     void setAcceptable(bool setter);
+    void setActive(bool setter);
 };
 
 
-//STATEEVENT CLASS!!!
 
-class StateEvent{
+class StateEvent{ //Events that cause transitions between the states
 private:
-    char* prevState;
+    char* currentState;
     char* nextState;
 public:
+    StateEvent(){};
+    StateEvent(char* ctorcurrentstate, char* ctornextstate){currentState = ctorcurrentstate; nextState = ctornextstate;};
+    void nextStateEvent();
 
 };
 
@@ -142,8 +148,6 @@ inline char cast(Bazis b, bool upper = true) {
     }
     return ret;
 }
-
-int Atoi(char* str);
 
 
 #endif

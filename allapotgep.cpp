@@ -22,6 +22,11 @@ char& States::getName(){
 bool States::getAcceptable() const{
     return this->acceptable;
 }
+
+bool States::getActive(){
+    return this->active;
+}
+
 void States::setName(char* newname){
     this->name = new char[21];
     for (int j = 0; j < 21; ++j) {
@@ -31,9 +36,26 @@ void States::setName(char* newname){
     }
 }
 
+void States::setAcceptable(char setter){
+    if(setter == 'i' || setter == 'I')
+        this->acceptable = true;
+    if(setter == 'h' || setter == 'H')
+        this->acceptable = false;
+}
+
 void States::setAcceptable(bool setter){
     this->acceptable = setter;
 }
+
+void States::setActive(bool setter) {
+    this->active = setter;
+}
+
+
+void StateEvent::nextStateEvent(){
+
+}
+
 
 
 /**
@@ -54,25 +76,49 @@ void Allapotgep::konfigural(const char* fajlnev){
         States states[numOfStates];
 
         for (int i = 0; i < numOfStates; ++i) {
-            char* acceptState = new char[1];
+            char acceptState;
             myFile >> acceptState;
             states[i].setAcceptable(acceptState);
-            delete[] acceptState;
 
-            char* nameState = new char[20];
+            char* nameState = new char[21];
             myFile >> nameState;
             states[i].setName(nameState);
             delete[] nameState;
         }
 
+        //making the base state active
+        states[0].setActive(true);
+
         //To get the events of the state machine
         for (int i = 0; i < numOfStates; ++i) {
             for (int j = 0; j < numOfStates; ++j) {
-                char* eventGen = new char [4];
+                char* eventGen = new char [5];
                 myFile >> eventGen;
-                switch(eventGen){
+                for (int k = 0; k < 4; ++k) {
+                    switch(eventGen[k]){
+                        case '0':
+                            break;
+                        case 'A':
+                        case 'a':
 
+                            break;
+                        case 'C':
+                        case 'c':
+
+                            break;
+                        case 'G':
+                        case 'g':
+
+                            break;
+                        case 'T':
+                        case 't':
+
+                            break;
+                        /*default:
+                            throw (std::invalid_argument("Invalid genetic type in config file"));*/
+                    }
                 }
+
             }
         }
 
