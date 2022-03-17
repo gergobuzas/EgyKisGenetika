@@ -50,13 +50,23 @@ public:
 
 class StateEvent{ //Events that cause transitions between the states
 private:
-    char currentStateNum;
-    char nextStateNum;
-    States states[];
+    int currentStateNum;
+    int nextStateNum;
+    char causingChar;
 public:
-    void nextStateEvent(States states[], int currentStateNum, int nextStateNum);
+    int getCurrentStateNum() const;
+    int getNextStateNum() const;
+    char getCausingChar() const;
+    void setCurrentStateNum(int num);
+    void setNextStateNum(int num);
+    void setCausingChar(char setter);
+
 
 };
+
+
+
+
 
 
 /**
@@ -66,6 +76,7 @@ public:
 class Allapotgep {
 private:
     int numOfStates;
+    int numOfStateEvents;
     StateEvent* nextStateLogic;
     States states[];
 public:
@@ -109,7 +120,7 @@ public:
      */
     void alaphelyzet();
 
-    ~Allapotgep();
+    ~Allapotgep(){};
 };
 
 

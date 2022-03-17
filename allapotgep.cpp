@@ -52,10 +52,34 @@ void States::setActive(bool setter) {
 }
 
 
-/* void StateEvent::nextStateEvent(States* states, int currentStateNum, int nextStateNum){
+/*void StateEvent::nextStateEvent(int currentStateNum, int nextStateNum){
     states[currentStateNum].setActive(false);
     states[nextStateNum].setActive(true);
-} */
+}*/
+
+void StateEvent::setCurrentStateNum(int num){
+    currentStateNum = num;
+}
+
+void StateEvent::setNextStateNum(int num) {
+    nextStateNum = num;
+}
+
+void StateEvent::setCausingChar(char setter){
+    causingChar = setter;
+}
+
+int StateEvent::getCurrentStateNum() const{
+    return currentStateNum;
+}
+
+int StateEvent::getNextStateNum() const{
+    return nextStateNum;
+}
+
+char StateEvent::getCausingChar() const {
+    return causingChar;
+}
 
 
 
@@ -87,7 +111,7 @@ void Allapotgep::konfigural(const char* fajlnev){
         }
 
         //To get the events of the state machine
-        int numOfStateEvents = 0;
+        numOfStateEvents = 0;
         for (int i = 0; i < numOfStates; ++i) {
             for (int j = 0; j < numOfStates; ++j) {
                 char* eventGen = new char [5];
@@ -106,7 +130,7 @@ void Allapotgep::konfigural(const char* fajlnev){
                         case 't':
                             numOfStateEvents++;
                             if (numOfStateEvents > 1){
-                                StateEvent* nextStateLogicTEMP = new StateEvent [numOfStateEvents];
+                                StateEvent* nextStateLogicTEMP = new StateEvent [numOfStateEvents]; //working with the memory management
                                 for (int l = 0; l < numOfStateEvents - 1; ++l) {
                                     nextStateLogicTEMP[l] = nextStateLogic[l];
                                 }
@@ -116,8 +140,17 @@ void Allapotgep::konfigural(const char* fajlnev){
                                     nextStateLogic[l] = nextStateLogicTEMP[l];
                                 }
                                 delete[] nextStateLogicTEMP;
+
+                                nextStateLogic[numOfStateEvents-1].setCurrentStateNum(i); //saving the EVENTS to an array(currentstate = from    nextstate = to)
+                                nextStateLogic[numOfStateEvents-1].setCausingChar(eventGen[k]);
+                                nextStateLogic[numOfStateEvents-1].setNextStateNum(j);
                             }
-                            nextStateLogic = new StateEvent [numOfStateEvents];
+                            else{
+                                nextStateLogic = new StateEvent [numOfStateEvents];
+                                nextStateLogic[numOfStateEvents-1].setCurrentStateNum(i);
+                                nextStateLogic[numOfStateEvents-1].setCausingChar(eventGen[k]);
+                            }
+
                             break;
                         /*default:
                             throw (std::invalid_argument("Invalid genetic type in config file"));*/
@@ -139,6 +172,84 @@ void Allapotgep::konfigural(const char* fajlnev){
      * @return pointer az aktív állapot nevére
      */
 const char* Allapotgep::aktualisallapot(){
-
+    for (int i = 0; i < numOfStates; ++i) {
+        if (states[i].getActive()){
+            return &states[i].getName();
+        }
+    }
 }
+
+/**
+  * Elfogadó állapotban van-e az állapotgép.
+  * @return true, ha elfogadó állapotban van
+  */
+bool Allapotgep::elfogad(){
+    for (int i = 0; i < numOfStates; ++i) {
+        if (states[i].getActive()){
+            if(states[i].getAcceptable()){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
+/**
+ * Az aktuális állapotnak és inputnak megfelelő következő állapotba léptet.
+ * @param b - beérkező bázis, mint input
+ */
+void Allapotgep::atmenet(Bazis b){
+    char input = cast(b, false);
+
+    for (int i = 0; i < numOfStates; ++i) {
+        if (states[i].getActive()){
+            for (int j = 0; j < numOfStateEvents; ++j) {
+                if(i == nextStateLogic[j].getCurrentStateNum() && input == nextStateLogic[j].getCausingChar()){
+                    states[i].setActive(false);
+                    states[nextStateLogic[j].getNextStateNum()].setActive(true);
+                }
+            }
+        }
+    }
+}
+
+
+/**
+ * Feldolgozza a paraméterként kapott bázissorozatot.
+ * Visszaadja, hogy elfogadó állapotba került-e. (Nem áll vissza kezdő állapotba.)
+ * @param b - input sorozatra mutató pointer
+ * @param n - a sorozat hossza
+ * @return tru, ha elfogadó állapotba került
+*/
+bool Allapotgep::feldolgoz(const Bazis *b, int n){
+    /*char input[n];
+    for (int i = 0; i < n; ++i) {
+        input[i] = cast(b[i], false);
+    }*/
+
+    for (int i = 0; i < n; ++i) {
+        atmenet(b[i]);
+    }
+
+    for (int i = 0; i < numOfStates; ++i) {
+        if (states[i].getActive()){
+            if(states[i].getAcceptable()){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+/**
+     * Kezdő állapotba visz.
+     */
+void Allapotgep::alaphelyzet(){
+    for (int i = 0; i < numOfStates; ++i) {
+        states[i].setActive(false);
+    }
+    states[0].setActive(true);
+}
+
 
