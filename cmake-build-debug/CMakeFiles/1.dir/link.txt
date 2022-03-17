@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/1.dir/main.cpp.o CMakeFiles/1.dir/memtrace.cpp.o CMakeFiles/1.dir/allapotgep.cpp.o -o 1 

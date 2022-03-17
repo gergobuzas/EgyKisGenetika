@@ -1,0 +1,4 @@
+/app/extra/clion/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DMEMTRACE=1 -G "CodeBlocks - Unix Makefiles" /home/gergobuzas/data/Egyetem/2_Felev/Szorgalmi/1
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/gergobuzas/data/Egyetem/2_Felev/Szorgalmi/1/cmake-build-debug
