@@ -77,19 +77,29 @@ public:
     ~Allapotgep(); /*EZT MAJD MEG KELL MÉG ÍRNI*/
 };
 
-class States{ //for storing the states from the file
+class States{ //for storing the states from the config file
 private:
     char* name;
     bool acceptable;
 public:
+    States(){};
+    States(char* nam, bool acc) {name = nam; acceptable = acc;};
     char& getName();
-    bool getAcceptable();
+    bool getAcceptable() const;
     void setName(char* newname);
     void setAcceptable(bool setter);
 };
 
 
 //STATEEVENT CLASS!!!
+
+class StateEvent{
+private:
+    char* prevState;
+    char* nextState;
+public:
+
+};
 
 
 /**

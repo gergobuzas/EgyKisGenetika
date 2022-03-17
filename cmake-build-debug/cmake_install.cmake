@@ -1,4 +1,4 @@
-# Install script for directory: /home/gergobuzas/data/Egyetem/2_Felev/Szorgalmi/1
+# Install script for directory: /home/gergobuzas/data/egyetem/2_felev/Prog2/EgyKisGenetika
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/gergobuzas/data/Egyetem/2_Felev/Szorgalmi/1/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/gergobuzas/data/egyetem/2_felev/Prog2/EgyKisGenetika/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

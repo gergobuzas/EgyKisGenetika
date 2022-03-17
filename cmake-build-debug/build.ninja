@@ -39,13 +39,13 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = /home/gergobuzas/data/Egyetem/2_Felev/Szorgalmi/1/cmake-build-debug/
+cmake_ninja_workdir = /home/gergobuzas/data/egyetem/2_felev/Prog2/EgyKisGenetika/cmake-build-debug/
 
 #############################################
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/gergobuzas/data/Egyetem/2_Felev/Szorgalmi/1/cmake-build-debug && /app/extra/clion/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/gergobuzas/data/Egyetem/2_Felev/Szorgalmi/1 -B/home/gergobuzas/data/Egyetem/2_Felev/Szorgalmi/1/cmake-build-debug
+  COMMAND = cd /home/gergobuzas/data/egyetem/2_felev/Prog2/EgyKisGenetika/cmake-build-debug && /app/extra/clion/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/gergobuzas/data/egyetem/2_felev/Prog2/EgyKisGenetika -B/home/gergobuzas/data/egyetem/2_felev/Prog2/EgyKisGenetika/cmake-build-debug
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -57,7 +57,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/gergobuzas/data/Egyetem/2_Felev/Szorgalmi/1/cmake-build-debug && /app/extra/clion/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  COMMAND = cd /home/gergobuzas/data/egyetem/2_felev/Prog2/EgyKisGenetika/cmake-build-debug && /app/extra/clion/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -72,8 +72,24 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 
 build cmake_object_order_depends_target_1: phony || CMakeFiles/1.dir
 
-build CMakeFiles/1.dir/main.cpp.o: CXX_COMPILER__1_Debug /home/gergobuzas/data/Egyetem/2_Felev/Szorgalmi/1/main.cpp || cmake_object_order_depends_target_1
+build CMakeFiles/1.dir/main.cpp.o: CXX_COMPILER__1_Debug /home/gergobuzas/data/egyetem/2_felev/Prog2/EgyKisGenetika/main.cpp || cmake_object_order_depends_target_1
   DEP_FILE = CMakeFiles/1.dir/main.cpp.o.d
+  FLAGS = -g -std=gnu++98
+  OBJECT_DIR = CMakeFiles/1.dir
+  OBJECT_FILE_DIR = CMakeFiles/1.dir
+  TARGET_COMPILE_PDB = CMakeFiles/1.dir/
+  TARGET_PDB = 1.pdb
+
+build CMakeFiles/1.dir/memtrace.cpp.o: CXX_COMPILER__1_Debug /home/gergobuzas/data/egyetem/2_felev/Prog2/EgyKisGenetika/memtrace.cpp || cmake_object_order_depends_target_1
+  DEP_FILE = CMakeFiles/1.dir/memtrace.cpp.o.d
+  FLAGS = -g -std=gnu++98
+  OBJECT_DIR = CMakeFiles/1.dir
+  OBJECT_FILE_DIR = CMakeFiles/1.dir
+  TARGET_COMPILE_PDB = CMakeFiles/1.dir/
+  TARGET_PDB = 1.pdb
+
+build CMakeFiles/1.dir/allapotgep.cpp.o: CXX_COMPILER__1_Debug /home/gergobuzas/data/egyetem/2_felev/Prog2/EgyKisGenetika/allapotgep.cpp || cmake_object_order_depends_target_1
+  DEP_FILE = CMakeFiles/1.dir/allapotgep.cpp.o.d
   FLAGS = -g -std=gnu++98
   OBJECT_DIR = CMakeFiles/1.dir
   OBJECT_FILE_DIR = CMakeFiles/1.dir
@@ -88,7 +104,7 @@ build CMakeFiles/1.dir/main.cpp.o: CXX_COMPILER__1_Debug /home/gergobuzas/data/E
 #############################################
 # Link the executable 1
 
-build 1: CXX_EXECUTABLE_LINKER__1_Debug CMakeFiles/1.dir/main.cpp.o
+build 1: CXX_EXECUTABLE_LINKER__1_Debug CMakeFiles/1.dir/main.cpp.o CMakeFiles/1.dir/memtrace.cpp.o CMakeFiles/1.dir/allapotgep.cpp.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/1.dir
   POST_BUILD = :
@@ -106,7 +122,7 @@ build 1: CXX_EXECUTABLE_LINKER__1_Debug CMakeFiles/1.dir/main.cpp.o
 # =============================================================================
 
 #############################################
-# Folder: /home/gergobuzas/data/Egyetem/2_Felev/Szorgalmi/1/cmake-build-debug
+# Folder: /home/gergobuzas/data/egyetem/2_felev/Prog2/EgyKisGenetika/cmake-build-debug
 
 build all: phony 1
 

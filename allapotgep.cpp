@@ -14,20 +14,12 @@
 #include "allapotgep.h"
 #include "memtrace.h"
 
-int Atoi(char* str){
-    int res = 0;
-    for (int i = 0; str[i] != '\0'; ++i){
-        res = res * 10 + str[i] - '0';
-    }
-    return res;
-}
-
 
 char& States::getName(){
     return *this->name;
 }
 
-bool States::getAcceptable(){
+bool States::getAcceptable() const{
     return this->acceptable;
 }
 void States::setName(char* newname){
@@ -54,30 +46,36 @@ void States::setAcceptable(bool setter){
 void Allapotgep::konfigural(const char* fajlnev){
     std::ifstream myFile(fajlnev);
     if (myFile.is_open()){
-        //Reading the first line
-        char* line = new char[1];
-        myFile.getline(line, 1);
-        int num = Atoi(line);
-        delete[] line;
+        //To get the number of states from the first line
+        int numOfStates;
+        myFile >> numOfStates;
 
+        //Reading the next lines of the config file, thus getting the states of the state machine
+        States states[numOfStates];
 
-        //Reading every line of the config file, thus getting the states
-        line = new char[21];
-        States states[num];
+        for (int i = 0; i < numOfStates; ++i) {
+            char* acceptState = new char[1];
+            myFile >> acceptState;
+            states[i].setAcceptable(acceptState);
+            delete[] acceptState;
 
-        int i = 0;
-        while(myFile.getline(line, 21)){
-            if (i > 0){
-                if (line[0] == 'I')
-                    states[i-1].setAcceptable(true);
-                else
-                    states[i-1].setAcceptable(false);
-
-                line = line + 2; //moving the char pointer two bits forward, to delete "I " from the string
-                states[i-1].setName(line);
-            }
-            ++i;
+            char* nameState = new char[20];
+            myFile >> nameState;
+            states[i].setName(nameState);
+            delete[] nameState;
         }
+
+        //To get the events of the state machine
+        for (int i = 0; i < numOfStates; ++i) {
+            for (int j = 0; j < numOfStates; ++j) {
+                char* eventGen = new char [4];
+                myFile >> eventGen;
+                switch(eventGen){
+
+                }
+            }
+        }
+
     }
     else
         throw("E0PWAX");
