@@ -35,6 +35,7 @@ private:
     bool active;
     bool acceptable;
 public:
+    int id;
     States(){active = false; acceptable = false;};
     char* getName();
     bool getAcceptable() const;

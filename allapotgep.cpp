@@ -107,6 +107,7 @@ void Allapotgep::konfigural(const char* fajlnev){
         char* nameState = new char[21];
         myFile >> nameState;
         states[i].setName(nameState);
+        states[i].id=i;
         delete[] nameState;
     }
 
@@ -171,7 +172,7 @@ void Allapotgep::konfigural(const char* fajlnev){
      * @return pointer az aktív állapot nevére
      */
 const char* Allapotgep::aktualisallapot(){
-    return current->getName(); //we can't reach this part of the code, so we are returning random text
+    return current->getName();
 }
 
 /**
@@ -179,14 +180,7 @@ const char* Allapotgep::aktualisallapot(){
   * @return true, ha elfogadó állapotban van
   */
 bool Allapotgep::elfogad(){
-    for (int i = 0; i < numOfStates; ++i) {
-        if (states[i].getActive()){
-            if(states[i].getAcceptable()){
-                return true;
-            }
-        }
-    }
-    return false;
+    return current->getAcceptable();
 }
 
 
@@ -196,14 +190,16 @@ bool Allapotgep::elfogad(){
  */
 void Allapotgep::atmenet(Bazis b){
     char input = cast(b, true);
-            for (int j = 0; j < numOfStateEvents; ++j) {
-                if(input == nextStateLogic[j].getCausingChar()){
-                    current->setActive(false);
-                    states[ nextStateLogic[j].getNextStateNum() ].setActive(true);
-                    current = &states[nextStateLogic[j].getNextStateNum()];
-                }
+    for (int j = 0; j < numOfStateEvents; ++j) {
+        if(input == nextStateLogic[j].getCausingChar()){
+            if (current->id == states[nextStateLogic[j].getCurrentStateNum()].id){
+                current->setActive(false);
+                states[ nextStateLogic[j].getNextStateNum() ].setActive(true);
+                current = &states[nextStateLogic[j].getNextStateNum()];
             }
         }
+    }
+}
 
 /**
  * Feldolgozza a paraméterként kapott bázissorozatot.
@@ -226,7 +222,9 @@ void Allapotgep::alaphelyzet(){
     for (int i = 0; i < numOfStates; ++i) {
         states[i].setActive(false);
     }
+    current = &states[0];
     states[0].setActive(true);
+
 }
 
 
