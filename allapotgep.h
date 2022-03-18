@@ -31,12 +31,12 @@ enum Bazis {
 
 class States{ //for storing the states from the config file
 private:
-    char* name;
+    char name[21];
     bool active;
     bool acceptable;
 public:
     States(){active = false; acceptable = false;};
-    States(char* nam, bool act, bool acc) {name = nam; active = act; acceptable = acc;};
+    //States(char* nam, bool act, bool acc) {name = nam; active = act; acceptable = acc;};
     char& getName();
     bool getAcceptable() const;
     bool getActive();
@@ -44,6 +44,7 @@ public:
     void setAcceptable(char setter);
     void setAcceptable(bool setter);
     void setActive(bool setter);
+    ~States(){};
 };
 
 
@@ -60,8 +61,6 @@ public:
     void setCurrentStateNum(int num);
     void setNextStateNum(int num);
     void setCausingChar(char setter);
-
-
 };
 
 
@@ -78,7 +77,7 @@ private:
     int numOfStates;
     int numOfStateEvents;
     StateEvent* nextStateLogic;
-    States states[];
+    States* states;
 public:
     /**
      * Konfig fájl beolvasása. Ha a fájl nem létezik/nem lehet megnyitni eldobja a NEPTUN-kódot.
@@ -119,8 +118,13 @@ public:
      * Kezdő állapotba visz.
      */
     void alaphelyzet();
-
-    ~Allapotgep(){};
+    Allapotgep(){
+        numOfStates=0;
+    }
+    ~Allapotgep(){if(numOfStates>0) {
+        delete[] states;
+        delete[] nextStateLogic;}
+    }
 };
 
 
