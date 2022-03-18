@@ -36,13 +36,11 @@ private:
     bool acceptable;
 public:
     States(){active = false; acceptable = false;};
-    //States(char* nam, bool act, bool acc) {name = nam; active = act; acceptable = acc;};
-    char& getName();
+    char* getName();
     bool getAcceptable() const;
     bool getActive();
     void setName(char* newname);
     void setAcceptable(char setter);
-    void setAcceptable(bool setter);
     void setActive(bool setter);
     ~States(){};
 };
@@ -61,9 +59,8 @@ public:
     void setCurrentStateNum(int num);
     void setNextStateNum(int num);
     void setCausingChar(char setter);
+    //StateEvent& operator=(StateEvent& rhs);
 };
-
-
 
 
 
@@ -78,6 +75,7 @@ private:
     int numOfStateEvents;
     StateEvent* nextStateLogic;
     States* states;
+    States* current;
 public:
     /**
      * Konfig fájl beolvasása. Ha a fájl nem létezik/nem lehet megnyitni eldobja a NEPTUN-kódot.
@@ -119,11 +117,13 @@ public:
      */
     void alaphelyzet();
     Allapotgep(){
-        numOfStates=0;
+        numOfStates = 0;
     }
-    ~Allapotgep(){if(numOfStates>0) {
+    ~Allapotgep(){
+        if(numOfStates > 0) {
         delete[] states;
-        delete[] nextStateLogic;}
+        delete[] nextStateLogic;
+        }
     }
 };
 

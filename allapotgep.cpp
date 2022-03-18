@@ -14,8 +14,8 @@
 #include "memtrace.h"
 
 
-char& States::getName(){
-    return *this->name;
+char* States::getName(){
+    return this->name;
 }
 
 bool States::getAcceptable() const{
@@ -39,10 +39,6 @@ void States::setAcceptable(char setter){
         this->acceptable = true;
     if(setter == 'h' || setter == 'H')
         this->acceptable = false;
-}
-
-void States::setAcceptable(bool setter){
-    this->acceptable = setter;
 }
 
 void States::setActive(bool setter) {
@@ -73,6 +69,12 @@ char StateEvent::getCausingChar() const {
     return causingChar;
 }
 
+/*StateEvent StateEvent::operator=(StateEvent& rhs){
+    this->currentStateNum = rhs.currentStateNum;
+    this->causingChar = rhs.causingChar;
+    this->nextStateNum = rhs.nextStateNum;
+    return *this;
+}*/
 
 
 /**
@@ -147,6 +149,7 @@ void Allapotgep::konfigural(const char* fajlnev){
                             nextStateLogic = new StateEvent [numOfStateEvents];
                             nextStateLogic[numOfStateEvents-1].setCurrentStateNum(i);
                             nextStateLogic[numOfStateEvents-1].setCausingChar(eventGen[k]);
+                            nextStateLogic[numOfStateEvents-1].setNextStateNum(j);
                         }
 
                         break;
@@ -160,6 +163,7 @@ void Allapotgep::konfigural(const char* fajlnev){
 
     //making the BASE state active
     states[0].setActive(true);
+    current = &states[0];
 
     }
 
@@ -167,12 +171,7 @@ void Allapotgep::konfigural(const char* fajlnev){
      * @return pointer az aktív állapot nevére
      */
 const char* Allapotgep::aktualisallapot(){
-    for (int i = 0; i < numOfStates; ++i) {
-        if (states[i].getActive()){
-            return &states[i].getName();
-        }
-    }
-    return "asdf"; //we can't reach this part of the code, so we are returning random text
+    return current->getName(); //we can't reach this part of the code, so we are returning random text
 }
 
 /**
@@ -196,20 +195,15 @@ bool Allapotgep::elfogad(){
  * @param b - beérkező bázis, mint input
  */
 void Allapotgep::atmenet(Bazis b){
-    char input = cast(b, false);
-
-    for (int i = 0; i < numOfStates; ++i) {
-        if (states[i].getActive()){
+    char input = cast(b, true);
             for (int j = 0; j < numOfStateEvents; ++j) {
-                if(i == nextStateLogic[j].getCurrentStateNum() && input == nextStateLogic[j].getCausingChar()){
-                    states[i].setActive(false);
-                    states[nextStateLogic[j].getNextStateNum()].setActive(true);
+                if(input == nextStateLogic[j].getCausingChar()){
+                    current->setActive(false);
+                    states[ nextStateLogic[j].getNextStateNum() ].setActive(true);
+                    current = &states[nextStateLogic[j].getNextStateNum()];
                 }
             }
         }
-    }
-}
-
 
 /**
  * Feldolgozza a paraméterként kapott bázissorozatot.
@@ -219,11 +213,6 @@ void Allapotgep::atmenet(Bazis b){
  * @return tru, ha elfogadó állapotba került
 */
 bool Allapotgep::feldolgoz(const Bazis *b, int n){
-    /*char input[n];
-    for (int i = 0; i < n; ++i) {
-        input[i] = cast(b[i], false);
-    }*/
-
     for (int i = 0; i < n; ++i) {
         atmenet(b[i]);
     }
