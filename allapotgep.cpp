@@ -23,7 +23,7 @@ bool States::getAcceptable() const{
 }
 
 int States::getActive(){
-    return activeNUM;
+    return active;
 }
 
 void States::setName(char* newname){
@@ -41,8 +41,8 @@ void States::setAcceptable(char setter){
         this->acceptable = false;
 }
 
-void States::setActive(int num) {
-    activeNUM = num;
+void States::setActive(bool setter) {
+    active = setter;
 }
 
 void StateEvent::setCurrentStateNum(int num){
@@ -104,59 +104,52 @@ void Allapotgep::konfigural(const char* fajlnev){
     }
 
     //To get the events of the state machine
-    numOfStateEvents = 0;
+    numOfStateEvents = numOfStates * 4;
+    nextStateLogic = new StateEvent [numOfStateEvents];
+    int idx = 0;
+    char* eventGen = new char [5];
     for (int i = 0; i < numOfStates; ++i) {
         for (int j = 0; j < numOfStates; ++j) {
-            char* eventGen = new char [5];
             myFile >> eventGen;
-            for (int k = 0; k < 4; ++k) {
-                switch(eventGen[k]){
-                    case '0':
-                        break;
-                    case 'A':
-                    case 'a':
-                    case 'C':
-                    case 'c':
-                    case 'G':
-                    case 'g':
-                    case 'T':
-                    case 't':
-                        numOfStateEvents++;
-                        if (numOfStateEvents > 1){
-                            StateEvent* nextStateLogicTEMP = new StateEvent [numOfStateEvents]; //working with the memory management
-                            for (int l = 0; l < numOfStateEvents - 1; ++l) {
-                                nextStateLogicTEMP[l] = nextStateLogic[l];
-                            }
-                            delete[] nextStateLogic;
-                            nextStateLogic = new StateEvent [numOfStateEvents];
-                            for (int l = 0; l < numOfStateEvents; ++l) {
-                                nextStateLogic[l] = nextStateLogicTEMP[l];
-                            }
-                            delete[] nextStateLogicTEMP;
+            if(eventGen[0] != 0){
+                for (int k = 0; eventGen[k] != '\0'; ++k) {
+                    if(eventGen[k] == 'A' || eventGen[k] == 'a' || eventGen[k] == 'C' || eventGen[k] == 'c' || eventGen[k] == 'g' || eventGen[k] == 'G' || \
+                    eventGen[k] == 'T' || eventGen[k] == 't' ){
+                        nextStateLogic[idx++].setCurrentStateNum(i);
+                        nextStateLogic[idx++].setCausingChar(eventGen[k]);
+                        nextStateLogic[idx++].setNextStateNum(j);
+                    /*
+                    switch(eventGen[k]){
+                        case '0':
+                            //delete[] eventGen;
+                            break;
+                        case 'A':
+                        case 'a':
+                        case 'C':
+                        case 'c':
+                        case 'G':
+                        case 'g':
+                        case 'T':
+                        case 't':
+                            nextStateLogic[idx++].setCurrentStateNum(i);
+                            nextStateLogic[idx++].setCausingChar(eventGen[k]);
+                            nextStateLogic[idx++].setNextStateNum(j);
+                            break;*/
+                            /*default:
+                                throw (std::invalid_argument("Invalid genetic type in config file"));*/
+                    }
 
-                            nextStateLogic[numOfStateEvents-1].setCurrentStateNum(i); //saving the EVENTS to an array(currentstate = from    nextstate = to)
-                            nextStateLogic[numOfStateEvents-1].setCausingChar(eventGen[k]);
-                            nextStateLogic[numOfStateEvents-1].setNextStateNum(j);
-                        }
-                        else{
-                            nextStateLogic = new StateEvent [numOfStateEvents];
-                            nextStateLogic[numOfStateEvents-1].setCurrentStateNum(i);
-                            nextStateLogic[numOfStateEvents-1].setCausingChar(eventGen[k]);
-                            nextStateLogic[numOfStateEvents-1].setNextStateNum(j);
-                        }
-
-                        break;
-                    /*default:
-                        throw (std::invalid_argument("Invalid genetic type in config file"));*/
                 }
             }
             delete[] eventGen;
         }
     }
+     //delete[] eventGen;
 
     //making the BASE state active
-    states->setActive(0);
-    }
+    states[0].setActive(true);
+    myFile.close();
+}
 
 /** Visszaadja melyik állapot aktív.
      * @return pointer az aktív állapot nevére
@@ -178,18 +171,20 @@ bool Allapotgep::elfogad(){
  * Az aktuális állapotnak és inputnak megfelelő következő állapotba léptet.
  * @param b - beérkező bázis, mint input
  */
-void Allapotgep::atmenet(Bazis b){
-    char input = cast(b, true);
-    for (int j = 0; j < numOfStateEvents; ++j) {
-        if(input == nextStateLogic[j].getCausingChar()){
-            if (states->getActive() == nextStateLogic[j].getCurrentStateNum()){
-                states[states->getActive()].setActive(false);
-                states[ nextStateLogic[j].getNextStateNum() ].setActive(true);
-                states->setActive(nextStateLogic[j].getNextStateNum());
-            }
-        }
-    }
-}
+ void Allapotgep::atmenet(Bazis b){
+     char input = cast(b, false);
+
+     for (int i = 0; i < numOfStates; ++i) {
+         if (states[i].getActive()){
+             for (int j = 0; j < numOfStateEvents; ++j) {
+                 if(i == nextStateLogic[j].getCurrentStateNum() && input == nextStateLogic[j].getCausingChar()){
+                     states[i].setActive(false);
+                     states[nextStateLogic[j].getNextStateNum()].setActive(true);
+                 }
+             }
+         }
+     }
+ }
 
 /**
  * Feldolgozza a paraméterként kapott bázissorozatot.
@@ -209,7 +204,10 @@ bool Allapotgep::feldolgoz(const Bazis *b, int n){
  * Kezdő állapotba visz.
 */
 void Allapotgep::alaphelyzet(){
-    states->setActive(0);
+     for (int i = 0; i < numOfStates; ++i) {
+         states[i].setActive(false);
+     }
+    states[0].setActive(true);
 }
 
 
