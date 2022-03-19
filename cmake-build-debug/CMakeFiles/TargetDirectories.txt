@@ -1,3 +1,3 @@
-/home/gergobuzas/data/Egyetem/2_Felev/Szorgalmi/1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/gergobuzas/data/Egyetem/2_Felev/Szorgalmi/1/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/gergobuzas/data/Egyetem/2_Felev/Szorgalmi/1/cmake-build-debug/CMakeFiles/1.dir
+/home/gergobuzas/data/egyetem/2_felev/Prog2/EgyKisGenetika2/EgyKisGenetika/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/gergobuzas/data/egyetem/2_felev/Prog2/EgyKisGenetika2/EgyKisGenetika/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/gergobuzas/data/egyetem/2_felev/Prog2/EgyKisGenetika2/EgyKisGenetika/cmake-build-debug/CMakeFiles/1.dir

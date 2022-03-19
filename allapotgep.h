@@ -35,15 +35,14 @@ private:
     bool active;
     bool acceptable;
 public:
-    int id;
     States(){active = false; acceptable = false;};
     char* getName();
     bool getAcceptable() const;
-    bool getActive();
+    int getActive();
     void setName(char* newname);
     void setAcceptable(char setter);
     void setActive(bool setter);
-    ~States(){};
+
 };
 
 
@@ -60,7 +59,6 @@ public:
     void setCurrentStateNum(int num);
     void setNextStateNum(int num);
     void setCausingChar(char setter);
-    //StateEvent& operator=(StateEvent& rhs);
 };
 
 
@@ -76,7 +74,6 @@ private:
     int numOfStateEvents;
     StateEvent* nextStateLogic;
     States* states;
-    States* current;
 public:
     /**
      * Konfig fájl beolvasása. Ha a fájl nem létezik/nem lehet megnyitni eldobja a NEPTUN-kódot.
@@ -85,6 +82,8 @@ public:
      * @return -
      * @exception fájl megnyitási hiba esetén NEPTUN_KÓD
     */
+    Allapotgep(){numOfStates = 0;}
+
     void konfigural(const char* fajlnev);
 
     /** Visszaadja melyik állapot aktív.
@@ -117,13 +116,11 @@ public:
      * Kezdő állapotba visz.
      */
     void alaphelyzet();
-    Allapotgep(){
-        numOfStates = 0;
-    }
+
     ~Allapotgep(){
         if(numOfStates > 0) {
-        delete[] states;
-        delete[] nextStateLogic;
+            delete[] states;
+            delete[] nextStateLogic;
         }
     }
 };
