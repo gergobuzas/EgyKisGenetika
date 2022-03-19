@@ -22,8 +22,8 @@ bool States::getAcceptable() const{
     return this->acceptable;
 }
 
-bool States::getActive(){
-    return this->active;
+int States::getActive(){
+    return activeNUM;
 }
 
 void States::setName(char* newname){
@@ -41,8 +41,8 @@ void States::setAcceptable(char setter){
         this->acceptable = false;
 }
 
-void States::setActive(bool setter) {
-    this->active = setter;
+void States::setActive(int num) {
+    activeNUM = num;
 }
 
 void StateEvent::setCurrentStateNum(int num){
@@ -68,13 +68,6 @@ int StateEvent::getNextStateNum() const{
 char StateEvent::getCausingChar() const {
     return causingChar;
 }
-
-/*StateEvent StateEvent::operator=(StateEvent& rhs){
-    this->currentStateNum = rhs.currentStateNum;
-    this->causingChar = rhs.causingChar;
-    this->nextStateNum = rhs.nextStateNum;
-    return *this;
-}*/
 
 
 /**
@@ -107,7 +100,6 @@ void Allapotgep::konfigural(const char* fajlnev){
         char* nameState = new char[21];
         myFile >> nameState;
         states[i].setName(nameState);
-        states[i].id=i;
         delete[] nameState;
     }
 
@@ -163,16 +155,14 @@ void Allapotgep::konfigural(const char* fajlnev){
     }
 
     //making the BASE state active
-    states[0].setActive(true);
-    current = &states[0];
-
+    states->setActive(0);
     }
 
 /** Visszaadja melyik állapot aktív.
      * @return pointer az aktív állapot nevére
      */
 const char* Allapotgep::aktualisallapot(){
-    return current->getName();
+    return states[states->getActive()].getName();
 }
 
 /**
@@ -180,7 +170,7 @@ const char* Allapotgep::aktualisallapot(){
   * @return true, ha elfogadó állapotban van
   */
 bool Allapotgep::elfogad(){
-    return current->getAcceptable();
+    return states[states->getActive()].getAcceptable();
 }
 
 
@@ -192,10 +182,10 @@ void Allapotgep::atmenet(Bazis b){
     char input = cast(b, true);
     for (int j = 0; j < numOfStateEvents; ++j) {
         if(input == nextStateLogic[j].getCausingChar()){
-            if (current->id == states[nextStateLogic[j].getCurrentStateNum()].id){
-                current->setActive(false);
+            if (states->getActive() == nextStateLogic[j].getCurrentStateNum()){
+                states[states->getActive()].setActive(false);
                 states[ nextStateLogic[j].getNextStateNum() ].setActive(true);
-                current = &states[nextStateLogic[j].getNextStateNum()];
+                states->setActive(nextStateLogic[j].getNextStateNum());
             }
         }
     }
@@ -216,15 +206,10 @@ bool Allapotgep::feldolgoz(const Bazis *b, int n){
 }
 
 /**
-     * Kezdő állapotba visz.
-     */
+ * Kezdő állapotba visz.
+*/
 void Allapotgep::alaphelyzet(){
-    for (int i = 0; i < numOfStates; ++i) {
-        states[i].setActive(false);
-    }
-    current = &states[0];
-    states[0].setActive(true);
-
+    states->setActive(0);
 }
 
 

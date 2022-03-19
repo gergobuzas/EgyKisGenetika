@@ -32,17 +32,16 @@ enum Bazis {
 class States{ //for storing the states from the config file
 private:
     char name[21];
-    bool active;
+    int activeNUM;
     bool acceptable;
 public:
-    int id;
-    States(){active = false; acceptable = false;};
+    States(){activeNUM = 0; acceptable = false;};
     char* getName();
     bool getAcceptable() const;
-    bool getActive();
+    int getActive();
     void setName(char* newname);
     void setAcceptable(char setter);
-    void setActive(bool setter);
+    void setActive(int num);
     ~States(){};
 };
 
