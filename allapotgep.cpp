@@ -81,24 +81,26 @@ void Allapotgep::konfigural(const char* fajlnev){
     if(numOfStates > 0) {
         delete[] states;
         delete[] nextStateLogic;
+        alaphelyzet();
     }
-    std::ifstream myFile;
-    myFile.open(fajlnev);
-    if (myFile.fail()){
+
+    std::ifstream input;
+    input.open(fajlnev);
+    if (input.fail()){
         throw("E0PWAX");
     }
     //To get the number of states from the first line
-    myFile >> numOfStates;
+    input >> numOfStates;
 
     //Reading the next lines of the config file, thus getting the states of the state machine
     states = new States[numOfStates];
 
     for (int i = 0; i < numOfStates; ++i) {
         char acceptState;
-        myFile >> acceptState;
+        input >> acceptState;
         states[i].setAcceptable(acceptState);
         char* nameState = new char[21];
-        myFile >> nameState;
+        input >> nameState;
         states[i].setName(nameState);
         delete[] nameState;
     }
@@ -110,52 +112,35 @@ void Allapotgep::konfigural(const char* fajlnev){
     char* eventGen = new char [5];
     for (int i = 0; i < numOfStates; ++i) {
         for (int j = 0; j < numOfStates; ++j) {
-            myFile >> eventGen;
-            if(eventGen[0] != 0){
+            input >> eventGen;
                 for (int k = 0; eventGen[k] != '\0'; ++k) {
-                    if(eventGen[k] == 'A' || eventGen[k] == 'a' || eventGen[k] == 'C' || eventGen[k] == 'c' || eventGen[k] == 'g' || eventGen[k] == 'G' || \
-                    eventGen[k] == 'T' || eventGen[k] == 't' ){
-                        nextStateLogic[idx++].setCurrentStateNum(i);
-                        nextStateLogic[idx++].setCausingChar(eventGen[k]);
-                        nextStateLogic[idx++].setNextStateNum(j);
-                    /*
-                    switch(eventGen[k]){
-                        case '0':
-                            //delete[] eventGen;
-                            break;
-                        case 'A':
-                        case 'a':
-                        case 'C':
-                        case 'c':
-                        case 'G':
-                        case 'g':
-                        case 'T':
-                        case 't':
-                            nextStateLogic[idx++].setCurrentStateNum(i);
-                            nextStateLogic[idx++].setCausingChar(eventGen[k]);
+                    if (eventGen[k] == 'A' || eventGen[k] == 'a' || eventGen[k] == 'C' || eventGen[k] == 'c' ||
+                        eventGen[k] == 'g' || eventGen[k] == 'G' || \
+                        eventGen[k] == 'T' || eventGen[k] == 't') {
+                            nextStateLogic[idx].setCurrentStateNum(i);
+                            nextStateLogic[idx].setCausingChar(eventGen[k]);
                             nextStateLogic[idx++].setNextStateNum(j);
-                            break;*/
-                            /*default:
-                                throw (std::invalid_argument("Invalid genetic type in config file"));*/
                     }
 
                 }
-            }
-            delete[] eventGen;
         }
     }
-     //delete[] eventGen;
+     delete[] eventGen;
 
     //making the BASE state active
     states[0].setActive(true);
-    myFile.close();
+    input.close();
 }
 
 /** Visszaadja melyik állapot aktív.
      * @return pointer az aktív állapot nevére
      */
 const char* Allapotgep::aktualisallapot(){
-    return states[states->getActive()].getName();
+     for (int i = 0; i < numOfStates; ++i) {
+         if (states[i].getActive())
+             return states[i].getName();
+     }
+     return "Error";
 }
 
 /**
@@ -163,7 +148,11 @@ const char* Allapotgep::aktualisallapot(){
   * @return true, ha elfogadó állapotban van
   */
 bool Allapotgep::elfogad(){
-    return states[states->getActive()].getAcceptable();
+     for (int i = 0; i < numOfStates; ++i) {
+         if (states[i].getActive())
+             return states[i].getAcceptable();
+     }
+     return "Error";
 }
 
 
@@ -172,17 +161,21 @@ bool Allapotgep::elfogad(){
  * @param b - beérkező bázis, mint input
  */
  void Allapotgep::atmenet(Bazis b){
-     char input = cast(b, false);
-
+     char input = cast(b, true);
+     bool done = false;
      for (int i = 0; i < numOfStates; ++i) {
          if (states[i].getActive()){
              for (int j = 0; j < numOfStateEvents; ++j) {
                  if(i == nextStateLogic[j].getCurrentStateNum() && input == nextStateLogic[j].getCausingChar()){
                      states[i].setActive(false);
                      states[nextStateLogic[j].getNextStateNum()].setActive(true);
+                     done = true;
+                     break;
                  }
              }
          }
+         if (done)
+             break;
      }
  }
 

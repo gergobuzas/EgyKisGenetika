@@ -43,7 +43,6 @@ public:
     void setAcceptable(char setter);
     void setActive(bool setter);
 
-    ~States(){};
 };
 
 
@@ -60,8 +59,6 @@ public:
     void setCurrentStateNum(int num);
     void setNextStateNum(int num);
     void setCausingChar(char setter);
-    //StateEvent& operator=(StateEvent& rhs);
-    ~StateEvent(){};
 };
 
 
